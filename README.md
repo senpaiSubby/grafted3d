@@ -96,6 +96,11 @@ icon. `npm run build:icons` regenerates the set from `scripts/build-icons.mjs`:
 `display: browser` on purpose — the site has no offline support, so it should not
 present itself as an installable app.
 
+In-page glyphs for the social links (cube, chat bubble, branch, envelope) are stroke
+icons at the site's 1.6 weight, defined once in an SVG sprite at the top of
+`index.html` and referenced with `<use>`. They are decorative (`aria-hidden`) and
+inherit the link colour, so there are no coloured logos anywhere on the page.
+
 ## Deploying to GitHub Pages
 
 The repo is public and Pages builds it with GitHub Actions — no branch deploy, no
