@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grafted3D — 3D design and 3D printing</title>
+    <meta
+      name="description"
+      content="Grafted3D designs 3D models and 3D prints them. Custom parts, prototypes, and one-off objects, made in-house on Bambu Lab printers."
+    />
+    <link rel="canonical" href="https://grafted3d.com/" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#fbfbf9" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Grafted3D" />
+    <meta property="og:title" content="Grafted3D — We design 3D models and 3D print them" />
+    <meta
+      property="og:description"
+      content="Custom parts, prototypes, and one-off objects. Design, modeling, and 3D printing in-house."
+    />
+    <meta property="og:url" content="https://grafted3d.com/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Grafted3D — We design 3D models and 3D print them" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" src="/src/main.js"></script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Grafted3D",
+        "url": "https://grafted3d.com/",
+        "description": "We design custom 3D models and 3D print them on Bambu Lab printers.",
+        "sameAs": [
+          "https://makerworld.com/en/@Grafted3D",
+          "https://github.com/senpaiSubby",
+          "https://discord.gg/vGRDAPmKx"
+        ],
+        "serviceType": ["3D Design", "3D Modeling", "3D Printing"]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="header" id="header">
+      <div class="wrap header__inner">
+        <a class="brand" href="#home" aria-label="Grafted3D — home">
+          Grafted<span class="brand__accent">3D</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="#services" class="nav__link">What we do</a>
+          <a href="#process" class="nav__link">How it works</a>
+          <a href="#work" class="nav__link">Work</a>
+          <a href="#contact" class="nav__link">Contact</a>
+        </nav>
+
+        <a href="#contact" class="btn btn--sm header__cta">Start a project</a>
+
+        <button
+          class="burger"
+          id="burger"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div class="menu" id="mobile-menu" aria-hidden="true">
+        <div class="wrap menu__inner">
+          <a href="#services" class="menu__link">What we do</a>
+          <a href="#process" class="menu__link">How it works</a>
+          <a href="#work" class="menu__link">Work</a>
+          <a href="#contact" class="menu__link">Contact</a>
+          <a href="#contact" class="btn menu__cta">Start a project</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="home">
+        <div class="wrap hero__inner">
+          <div class="hero__copy">
+            <p class="eyebrow">Design · Model · Print</p>
+            <h1>We design 3D models and 3D print them.</h1>
+            <p class="hero__text">
+              Custom parts, prototypes, and one-off objects. Send an idea, a sketch, or a file —
+              we'll take it from design through to the printed part.
+            </p>
+            <div class="hero__actions">
+              <a href="#contact" class="btn">Start a project</a>
+              <a
+                href="https://makerworld.com/en/@Grafted3D"
+                class="btn btn--outline"
+                target="_blank"
+                rel="noopener"
+              >
+                See my designs
+              </a>
+            </div>
+          </div>
+
+          <div class="hero__art">
+            <div class="stage" data-stage data-state="loading">
+              <canvas
+                class="stage__canvas"
+                data-stage-canvas
+                tabindex="0"
+                role="application"
+                aria-label="3D model of the 3DBenchy calibration boat. Drag to rotate, or use the arrow keys when it has focus."
+              ></canvas>
+              <p class="stage__status" data-stage-status>Loading model…</p>
+            </div>
+            <p class="hero__caption">
+              <span>3DBenchy — reference part</span>
+              <span>Drag or arrow keys</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="wrap">
+          <dl class="specs">
+            <div class="spec">
+              <dt>Scope</dt>
+              <dd>Design, modeling, printing</dd>
+            </div>
+            <div class="spec">
+              <dt>Machines</dt>
+              <dd>Bambu Lab printers</dd>
+            </div>
+            <div class="spec">
+              <dt>Runs</dt>
+              <dd>One-off and small batches</dd>
+            </div>
+            <div class="spec">
+              <dt>Files</dt>
+              <dd>STL · OBJ · 3MF · STEP · PDF</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section" id="services">
+        <div class="wrap">
+          <div class="section__head">
+            <p class="section__meta">
+              <span class="section__idx">01</span>
+              <span class="section__label">What we do</span>
+              <span class="section__rule"></span>
+            </p>
+            <h2 class="section__title">Design, modeling, and printing</h2>
+            <p class="section__text">Three parts of the same job, done in one place.</p>
+          </div>
+
+          <div class="plates">
+            <article class="plate">
+              <span class="plate__code">A/01 — DESIGN</span>
+              <svg class="plate__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <path d="M4 17.5 5.2 13.5 14 4.7a2.1 2.1 0 0 1 3 3L8.2 16.5 4 17.5Z" stroke-linejoin="round" />
+              </svg>
+              <h3>3D design</h3>
+              <p>
+                Send a sketch, a photo, or a rough idea. We work out the shape, the proportions,
+                and what the part needs to do.
+              </p>
+            </article>
+
+            <article class="plate">
+              <span class="plate__code">A/02 — MODEL</span>
+              <svg class="plate__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <path d="M12 3 20 7.3v8.4L12 20 4 15.7V7.3L12 3Z" stroke-linejoin="round" />
+                <path d="M4 7.3 12 11.6l8-4.3M12 11.6V20" stroke-linejoin="round" />
+              </svg>
+              <h3>3D modeling</h3>
+              <p>
+                We build the model, check the dimensions, and prepare the file so it prints
+                cleanly.
+              </p>
+            </article>
+
+            <article class="plate">
+              <span class="plate__code">A/03 — PRINT</span>
+              <svg class="plate__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z" stroke-linejoin="round" />
+                <path d="m3 12 9 4.5 9-4.5M3 16.5 12 21l9-4.5" stroke-linejoin="round" />
+              </svg>
+              <h3>3D printing</h3>
+              <p>
+                We print it on Bambu Lab printers, clean up the part, and hand it over.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--band" id="process">
+        <div class="wrap">
+          <div class="section__head">
+            <p class="section__meta">
+              <span class="section__idx">02</span>
+              <span class="section__label">How it works</span>
+              <span class="section__rule"></span>
+            </p>
+            <h2 class="section__title">From your file to a finished part</h2>
+          </div>
+
+          <ol class="steps">
+            <li class="step">
+              <span class="step__num" aria-hidden="true">1</span>
+              <span class="step__code">STEP 01</span>
+              <h3>Send it over</h3>
+              <p>A sketch, a file, or a description. Whatever you have to start with.</p>
+            </li>
+            <li class="step">
+              <span class="step__num" aria-hidden="true">2</span>
+              <span class="step__code">STEP 02</span>
+              <h3>We design and model</h3>
+              <p>We come back with a design and any questions before anything is printed.</p>
+            </li>
+            <li class="step">
+              <span class="step__num" aria-hidden="true">3</span>
+              <span class="step__code">STEP 03</span>
+              <h3>We print and hand over</h3>
+              <p>The finished part, printed, checked, and passed to you.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section" id="work">
+        <div class="wrap work">
+          <div class="work__copy">
+            <p class="section__meta">
+              <span class="section__idx">03</span>
+              <span class="section__label">Work</span>
+              <span class="section__rule"></span>
+            </p>
+            <h2 class="section__title">See finished designs</h2>
+            <p class="section__text">
+              Designs, models, and printed parts are published on MakerWorld. That's the quickest
+              way to see what we make.
+            </p>
+          </div>
+
+          <a
+            class="work__card"
+            href="https://makerworld.com/en/@Grafted3D"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="work__row">
+              <span class="work__k">Platform</span>
+              <span class="work__v">MakerWorld</span>
+            </span>
+            <span class="work__row">
+              <span class="work__k">Profile</span>
+              <span class="work__v">@Grafted3D</span>
+            </span>
+            <span class="work__go">
+              <span>Open portfolio</span>
+              <span aria-hidden="true">↗</span>
+            </span>
+          </a>
+        </div>
+      </section>
+
+      <section class="section section--band" id="contact">
+        <div class="wrap contact">
+          <div class="contact__intro">
+            <p class="section__meta">
+              <span class="section__idx">04</span>
+              <span class="section__label">Contact</span>
+              <span class="section__rule"></span>
+            </p>
+            <h2 class="section__title">Tell us what you need made</h2>
+            <p class="section__text">
+              Send what you have and we'll reply with next steps. A file, a sketch, or just a
+              description is fine.
+            </p>
+
+            <ul class="checklist">
+              <li>What the part is for</li>
+              <li>Rough size and how many you need</li>
+              <li>Any files, sketches, or photos</li>
+              <li>When you need it</li>
+            </ul>
+
+            <p class="contact__links">
+              <a
+                class="contact__link"
+                href="https://makerworld.com/en/@Grafted3D"
+                target="_blank"
+                rel="noopener"
+                >MakerWorld ↗</a
+              >
+              <a
+                class="contact__link"
+                href="https://discord.gg/vGRDAPmKx"
+                target="_blank"
+                rel="noopener"
+                >Discord ↗</a
+              >
+              <a
+                class="contact__link"
+                href="https://github.com/senpaiSubby"
+                target="_blank"
+                rel="noopener"
+                >GitHub ↗</a
+              >
+            </p>
+          </div>
+
+          <form class="form" id="inquiry-form" novalidate>
+            <p class="form__head">
+              <span>Project brief</span>
+              <span class="form__no">F / 01</span>
+            </p>
+
+            <div class="field">
+              <label for="name"><span class="field__no">01</span> Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+              <p class="field__error" id="name-error" data-error-for="name" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label for="email"><span class="field__no">02</span> Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                inputmode="email"
+                required
+              />
+              <p class="field__error" id="email-error" data-error-for="email" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label for="projectType"><span class="field__no">03</span> What do you need?</label>
+              <select id="projectType" name="projectType" required>
+                <option value="" selected disabled>Choose one</option>
+                <option value="3D Design">3D design</option>
+                <option value="3D Modeling">3D modeling</option>
+                <option value="3D Printing">3D printing</option>
+                <option value="Full Project">All of it</option>
+              </select>
+              <p class="field__error" id="projectType-error" data-error-for="projectType" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label for="description"><span class="field__no">04</span> Details</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="4"
+                placeholder="What should it be? Rough size, what it's for."
+                required
+              ></textarea>
+              <p class="field__error" id="description-error" data-error-for="description" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label for="file"><span class="field__no">05</span> File <span class="field__opt">optional</span></label>
+              <div class="file" data-file-drop>
+                <input
+                  class="file__input"
+                  id="file"
+                  name="file"
+                  type="file"
+                  accept=".png,.jpg,.jpeg,.webp,.pdf,.stl,.obj,.3mf,.step,.stp,.zip"
+                />
+                <span class="file__text" data-file-text>Choose a file</span>
+              </div>
+              <p class="field__hint">Image, PDF, STL, OBJ, 3MF, STEP or ZIP. Max 10 MB.</p>
+              <p class="field__error" id="file-error" data-error-for="file" aria-live="polite"></p>
+            </div>
+
+            <div class="form__foot">
+              <button type="submit" class="btn">
+                <span data-submit-label>Send inquiry</span>
+              </button>
+              <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer__inner">
+        <div class="footer__brand">
+          <a class="brand" href="#home">Grafted<span class="brand__accent">3D</span></a>
+          <p>3D design and printing studio. Custom parts and one-off objects.</p>
+        </div>
+
+        <nav class="footer__col" aria-label="Footer">
+          <span class="footer__k">Page</span>
+          <a href="#services">What we do</a>
+          <a href="#process">How it works</a>
+          <a href="#work">Work</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <nav class="footer__col" aria-label="Elsewhere">
+          <span class="footer__k">Elsewhere</span>
+          <a href="https://makerworld.com/en/@Grafted3D" target="_blank" rel="noopener">MakerWorld</a>
+          <a href="https://discord.gg/vGRDAPmKx" target="_blank" rel="noopener">Discord</a>
+          <a href="https://github.com/senpaiSubby" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+
+      <div class="wrap footer__base">
+        <p>© <span id="year">2026</span> Grafted3D. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
