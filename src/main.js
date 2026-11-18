@@ -288,6 +288,46 @@ function initForm() {
   });
 }
 
+/* ==========================================================================
+   Scroll reveal
+
+   Sections fade in as they come into view. The class is added here, so with
+   no JavaScript — or with reduced motion — everything is simply visible.
+   ========================================================================== */
+function initReveal() {
+  if (!("IntersectionObserver" in window)) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (document.hidden) return;
+
+  const sections = Array.from(document.querySelectorAll("main > section"));
+  if (!sections.length) return;
+
+  sections.forEach((section) => section.classList.add("reveal"));
+
+  // Never leave the page blank if an observation is dropped: anything already
+  // on screen after a moment is shown regardless.
+  window.setTimeout(() => {
+    sections.forEach((section) => {
+      if (section.classList.contains("is-in")) return;
+      const rect = section.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) section.classList.add("is-in");
+    });
+  }, 1200);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
+      });
+    },
+    { rootMargin: "0px 0px -10% 0px" }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+}
+
 function initYear() {
   const year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
@@ -391,6 +431,7 @@ function initContactEmail() {
 initNav();
 initForm();
 initStage();
+initReveal();
 initAnalytics();
 initContactEmail();
 initYear();

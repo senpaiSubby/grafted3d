@@ -20,10 +20,10 @@
 import { writeFileSync, statSync } from "node:fs";
 import sharp from "sharp";
 
-const INK = "#17181a";
-const TOP = "#fbfbf9";
-const LEFT = "#176a49";
-const RIGHT = "#0f4d34";
+const INK = "#0b0f14";
+const TOP = "#e9eff3";
+const LEFT = "#2fbd82";
+const RIGHT = "#15734f";
 
 /** Cube faces in a 64-unit viewBox, centred on (32, 32). */
 const CUBE = `

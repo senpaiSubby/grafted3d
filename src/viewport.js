@@ -112,6 +112,11 @@ export function initStage() {
   fill.position.set(-80, 40, -70);
   scene.add(fill);
 
+  // Cool rim from behind, so the benchy separates from the dark stage.
+  const rim = new THREE.DirectionalLight(0x46e39a, 1.1);
+  rim.position.set(-120, 60, -140);
+  scene.add(rim);
+
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   canvas.style.touchAction = "pan-y";
@@ -126,7 +131,7 @@ export function initStage() {
   controls.autoRotate = !reducedMotion;
   controls.autoRotateSpeed = 0.85;
 
-  const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.18, color: 0x4b4237 });
+  const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.45, color: 0x000000 });
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), groundMaterial);
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
