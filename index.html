@@ -12,19 +12,15 @@
     <meta name="color-scheme" content="dark light" />
     <script>
       // Applies the saved theme before first paint, so there is no flash.
+      // Dark is the default for everyone; light is only used when it was chosen.
       (() => {
+        let theme = "dark";
         try {
-          const saved = localStorage.getItem("grafted3d-theme");
-          const theme =
-            saved === "light" || saved === "dark"
-              ? saved
-              : window.matchMedia("(prefers-color-scheme: light)").matches
-                ? "light"
-                : "dark";
-          document.documentElement.dataset.theme = theme;
+          if (localStorage.getItem("grafted3d-theme") === "light") theme = "light";
         } catch (error) {
-          document.documentElement.dataset.theme = "dark";
+          /* private mode: keep the dark default */
         }
+        document.documentElement.dataset.theme = theme;
       })();
     </script>
     <meta name="theme-color" content="#06070a" />
