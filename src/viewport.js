@@ -170,7 +170,6 @@ export function initStage() {
   };
   const start = () => {
     if (raf) return;
-    lastFrame = performance.now();
     frame();
   };
   const stop = () => {
