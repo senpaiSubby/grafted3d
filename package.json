@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:model": "node scripts/build-benchy.mjs",
     "build:og": "node scripts/build-og.mjs",
+    "build:icons": "node scripts/build-icons.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
   "devDependencies": {

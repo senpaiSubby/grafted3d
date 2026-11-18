@@ -32,7 +32,9 @@ public/models/        Decimated 3DBenchy mesh for the 3D preview
 public/og-image.svg   Source art for the social preview; .png is generated from it
 public/robots.txt     Crawler rules + sitemap pointer
 public/sitemap.xml    Single-URL sitemap
-public/favicon.svg    Small G3D mark
+public/favicon.*      Vector mark, PNG fallback, multi-size .ico
+public/apple-touch-icon.png, public/icon-*.png, public/site.webmanifest
+                      Home-screen and PWA icons
 ```
 
 One page, one route. The only navigation is anchor links: `#home`, `#services`,
@@ -75,6 +77,24 @@ npm run build:og    # rewrites public/og-image.png (needs the sharp dev dependen
 
 Edit the SVG, re-run the script, and commit the PNG. `index.html` points `og:image`
 and `twitter:image` at `https://grafted3d.com/og-image.png`.
+
+## Icons
+
+One vector mark (an isometric cube on the ink background) is the source for every
+icon. `npm run build:icons` regenerates the set from `scripts/build-icons.mjs`:
+
+| File                      | Used for                                             |
+| ------------------------- | ---------------------------------------------------- |
+| `favicon.svg`             | modern browsers, crisp at any size                    |
+| `favicon.ico`             | 16/32/48 PNG-in-ICO for older browsers and OSes       |
+| `favicon-32.png`          | PNG fallback                                         |
+| `apple-touch-icon.png`    | iOS home screen (180px, full-bleed)                  |
+| `icon-192.png` / `-512`   | manifest `any`                                       |
+| `icon-maskable-512.png`   | manifest `maskable`, mark inside the 80% safe zone    |
+
+`site.webmanifest` lists the three manifest icons and sets the theme colours. It uses
+`display: browser` on purpose — the site has no offline support, so it should not
+present itself as an installable app.
 
 ## Deploying to GitHub Pages
 
