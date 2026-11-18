@@ -468,6 +468,49 @@ function initContactEmail() {
   if (footer) footer.append(makeLink("Email"));
 }
 
+/* ==========================================================================
+   Instrument chrome
+
+   The header rail fills as the page scrolls, and the hero light follows the
+   pointer. Both are decoration: with reduced motion or a touch screen they
+   simply stay still, and nothing is required for the page to work.
+   ========================================================================== */
+function initHud() {
+  const root = document.documentElement;
+  let max = 0;
+
+  const measure = () => {
+    max = root.scrollHeight - window.innerHeight;
+  };
+
+  const paint = () => {
+    const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    root.style.setProperty("--scroll", ratio.toFixed(4));
+  };
+
+  measure();
+  paint();
+  window.addEventListener("scroll", paint, { passive: true });
+  window.addEventListener("resize", () => {
+    measure();
+    paint();
+  });
+
+  const hero = document.querySelector("[data-spotlight]");
+  if (!hero) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+  hero.addEventListener("pointermove", (event) => {
+    const rect = hero.getBoundingClientRect();
+    hero.style.setProperty("--spot-x", `${Math.round(event.clientX - rect.left)}px`);
+    hero.style.setProperty("--spot-y", `${Math.round(event.clientY - rect.top)}px`);
+    hero.classList.add("is-lit");
+  });
+
+  hero.addEventListener("pointerleave", () => hero.classList.remove("is-lit"));
+}
+
 initNav();
 initTheme();
 initForm();
@@ -476,3 +519,4 @@ initReveal();
 initAnalytics();
 initContactEmail();
 initYear();
+initHud();

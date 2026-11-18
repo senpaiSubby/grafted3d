@@ -159,6 +159,7 @@
     <a class="skip" href="#main">Skip to content</a>
 
     <header class="header" id="header">
+      <span class="header__progress" aria-hidden="true"></span>
       <div class="wrap header__inner">
         <a class="brand" href="#home" aria-label="Grafted3D — home">
           Grafted<span class="brand__accent">3D</span>
@@ -214,11 +215,12 @@
     </header>
 
     <main id="main">
-      <section class="hero" id="home">
+      <section class="hero" id="home" data-spotlight>
+        <div class="hero__spot" aria-hidden="true"></div>
         <div class="wrap hero__inner">
           <div class="hero__copy">
             <p class="eyebrow">Design · Model · Print</p>
-            <h1>We design 3D models and 3D print them.</h1>
+            <h1>We design 3D models and <span class="hero__glow">3D print them.</span></h1>
             <p class="hero__text">
               Custom parts, prototypes, and one-off objects. Send an idea, a sketch, or a file —
               we'll take it from design through to the printed part.
@@ -248,6 +250,14 @@
                 aria-label="3D model of the 3DBenchy calibration boat. Drag to rotate, or use the arrow keys when it has focus."
               ></canvas>
               <p class="stage__status" data-stage-status>Loading model…</p>
+              <div class="hud" aria-hidden="true">
+                <span class="hud__c hud__c--tl"></span>
+                <span class="hud__c hud__c--tr"></span>
+                <span class="hud__c hud__c--bl"></span>
+                <span class="hud__c hud__c--br"></span>
+                <span class="hud__tag hud__tag--l"><span class="hud__dot"></span>G3D / VIEWPORT</span>
+                <span class="hud__tag hud__tag--r">ORBIT · LIVE</span>
+              </div>
               <div class="stage__file" data-stage-file hidden>
                 <span class="stage__file-name" data-stage-file-name></span>
                 <button type="button" data-stage-reset>Show the benchy</button>
