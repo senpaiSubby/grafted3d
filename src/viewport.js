@@ -169,7 +169,9 @@ export function initStage() {
     renderer.render(scene, camera);
   };
   const start = () => {
-    if (!raf) frame();
+    if (raf) return;
+    lastFrame = performance.now();
+    frame();
   };
   const stop = () => {
     if (raf) cancelAnimationFrame(raf);
