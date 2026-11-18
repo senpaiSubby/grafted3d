@@ -7,12 +7,18 @@
  * public/models/, decompressed with DecompressionStream and parsed here.
  *
  * Rotate with a drag or the arrow keys; it never zooms, so the page keeps its
- * scroll. Rendering pauses off screen and for reduced motion.
+ * scroll. Dropping an STL file onto the stage parses it locally in the browser
+ * (nothing is uploaded) and previews it in place. Rendering pauses off screen
+ * and for reduced motion.
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { STLLoader } from "three/addons/loaders/STLLoader.js";
 
 const MODEL_URL = `${import.meta.env.BASE_URL}models/3dbenchy.mesh.gz`;
+
+/** A visitor's own STL is parsed in memory, so keep a sane ceiling. */
+const MAX_PREVIEW_BYTES = 25 * 1024 * 1024;
 
 function parseModel(buffer) {
   const magic = String.fromCharCode(...new Uint8Array(buffer, 0, 4));
@@ -63,6 +69,9 @@ export function initStage() {
 
   const canvas = stage.querySelector("[data-stage-canvas]");
   const status = stage.querySelector("[data-stage-status]");
+  const fileBar = stage.querySelector("[data-stage-file]");
+  const fileLabel = stage.querySelector("[data-stage-file-name]");
+  const fileReset = stage.querySelector("[data-stage-reset]");
   if (!canvas) return;
 
   const setState = (state, message) => {
@@ -220,52 +229,137 @@ export function initStage() {
     else start();
   });
 
+  /* ------------------------------------------------------------------ models */
+  let benchyGeometry = null;
+  let currentMesh = null;
+
+  /** Centres a geometry, swaps it in, and reframes camera, shadow and ground. */
+  function applyGeometry(geometry) {
+    geometry.center();
+    geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
+
+    const previous = currentMesh;
+    if (previous) {
+      scene.remove(previous);
+      previous.material.dispose();
+      if (previous.geometry !== benchyGeometry) previous.geometry.dispose();
+    }
+
+    const box = geometry.boundingBox;
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const radius = Math.max(geometry.boundingSphere.radius, 0.001);
+
+    const mesh = new THREE.Mesh(
+      geometry,
+      new THREE.MeshStandardMaterial({
+        color: 0xf3ede1,
+        roughness: 0.62,
+        metalness: 0,
+      })
+    );
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    scene.add(mesh);
+    currentMesh = mesh;
+
+    ground.position.y = box.min.y - size.y * 0.015;
+
+    const shadowSize = radius * 1.4;
+    key.shadow.camera.left = -shadowSize;
+    key.shadow.camera.right = shadowSize;
+    key.shadow.camera.top = shadowSize;
+    key.shadow.camera.bottom = -shadowSize;
+    key.shadow.camera.near = 1;
+    key.shadow.camera.far = radius * 12;
+    key.shadow.camera.updateProjectionMatrix();
+    key.position.set(radius * 2.4, radius * 3, radius * 1.8);
+    key.target.position.set(0, 0, 0);
+
+    const distance = (radius / Math.sin((camera.fov * Math.PI) / 360)) * 1.02;
+    camera.near = distance * 0.05;
+    camera.far = distance * 6;
+    camera.position.set(0.72, 0.36, 1).normalize().multiplyScalar(distance);
+    camera.updateProjectionMatrix();
+
+    controls.target.set(0, size.y * 0.04, 0);
+    controls.update();
+
+    ready = true;
+    setState("ready", "");
+    start();
+  }
+
+  function setFileBar(name) {
+    if (!fileBar) return;
+    fileBar.hidden = !name;
+    if (fileLabel) fileLabel.textContent = name || "";
+    stage.classList.toggle("has-file", Boolean(name));
+  }
+
+  function flashError(message) {
+    setState("error", message);
+    window.setTimeout(() => {
+      if (currentMesh) setState("ready", "");
+    }, 2400);
+  }
+
+  async function previewFile(file) {
+    if (!/\.stl$/i.test(file.name)) {
+      flashError("Only STL files can be previewed.");
+      return;
+    }
+    if (file.size > MAX_PREVIEW_BYTES) {
+      flashError("That STL is over 25 MB.");
+      return;
+    }
+
+    setState("loading", `Reading ${file.name}…`);
+    try {
+      const buffer = await file.arrayBuffer();
+      const geometry = new STLLoader().parse(buffer);
+      // STL is conventionally Z-up; the scene is Y-up.
+      geometry.rotateX(-Math.PI / 2);
+      applyGeometry(geometry);
+      setFileBar(file.name);
+    } catch (error) {
+      console.error("[Grafted3D] Could not read that STL:", error);
+      flashError("That STL couldn't be read.");
+    }
+  }
+
+  ["dragenter", "dragover"].forEach((type) => {
+    stage.addEventListener(type, (event) => {
+      if (!event.dataTransfer?.types?.includes("Files")) return;
+      event.preventDefault();
+      stage.classList.add("is-drop");
+    });
+  });
+
+  stage.addEventListener("dragleave", (event) => {
+    if (stage.contains(event.relatedTarget)) return;
+    stage.classList.remove("is-drop");
+  });
+
+  stage.addEventListener("drop", (event) => {
+    if (!event.dataTransfer?.files?.length) return;
+    event.preventDefault();
+    stage.classList.remove("is-drop");
+    previewFile(event.dataTransfer.files[0]);
+  });
+
+  if (fileReset) {
+    fileReset.addEventListener("click", () => {
+      if (benchyGeometry) applyGeometry(benchyGeometry);
+      setFileBar("");
+    });
+  }
+
   loadGeometry()
     .then((geometry) => {
-      geometry.computeBoundingBox();
-      geometry.computeBoundingSphere();
-      const box = geometry.boundingBox;
-      const size = new THREE.Vector3();
-      box.getSize(size);
-      const radius = geometry.boundingSphere.radius;
-
-      const mesh = new THREE.Mesh(
-        geometry,
-        new THREE.MeshStandardMaterial({
-          color: 0xf3ede1,
-          roughness: 0.62,
-          metalness: 0,
-        })
-      );
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      scene.add(mesh);
-
-      ground.position.y = box.min.y - size.y * 0.015;
-
-      const shadowSize = radius * 1.4;
-      key.shadow.camera.left = -shadowSize;
-      key.shadow.camera.right = shadowSize;
-      key.shadow.camera.top = shadowSize;
-      key.shadow.camera.bottom = -shadowSize;
-      key.shadow.camera.near = 1;
-      key.shadow.camera.far = radius * 12;
-      key.shadow.camera.updateProjectionMatrix();
-      key.position.set(radius * 2.4, radius * 3, radius * 1.8);
-      key.target.position.set(0, 0, 0);
-
-      const distance = (radius / Math.sin((camera.fov * Math.PI) / 360)) * 1.02;
-      camera.near = distance * 0.05;
-      camera.far = distance * 6;
-      camera.position.set(0.72, 0.36, 1).normalize().multiplyScalar(distance);
-      camera.updateProjectionMatrix();
-
-      controls.target.set(0, size.y * 0.04, 0);
-      controls.update();
-
-      ready = true;
-      setState("ready", "");
-      start();
+      benchyGeometry = geometry;
+      applyGeometry(geometry);
     })
     .catch((error) => {
       console.error("[Grafted3D] 3D preview failed:", error);

@@ -1,13 +1,22 @@
 import "./style.css";
 import {
   ALLOWED_FILE_EXTENSIONS,
+  CF_BEACON_TOKEN,
+  CONTACT_EMAIL,
   INQUIRY_ENDPOINT,
   MAX_FILE_BYTES,
 } from "./config.js";
-import { initStage } from "./viewport.js";
 
 const MAKERWORLD = "https://makerworld.com/en/@Grafted3D";
 const DISCORD = "https://discord.gg/vGRDAPmKx";
+
+/** Every way a visitor can reach the studio, used by the form's notices. */
+function contactLinks() {
+  const links = [];
+  if (CONTACT_EMAIL) links.push({ href: `mailto:${CONTACT_EMAIL}`, text: "email" });
+  links.push({ href: MAKERWORLD, text: "MakerWorld" }, { href: DISCORD, text: "Discord" });
+  return links;
+}
 
 /* ==========================================================================
    Navigation
@@ -194,14 +203,19 @@ function initForm() {
     statusEl.replaceChildren();
     if (message) statusEl.append(document.createTextNode(message + " "));
     links.forEach((link, index) => {
-      if (index > 0) statusEl.append(document.createTextNode(" or "));
+      if (index > 0) {
+        statusEl.append(document.createTextNode(index === links.length - 1 ? "or " : ", "));
+      }
       const anchor = document.createElement("a");
       anchor.href = link.href;
       anchor.textContent = link.text;
-      anchor.target = "_blank";
-      anchor.rel = "noopener";
+      if (!link.href.startsWith("mailto:")) {
+        anchor.target = "_blank";
+        anchor.rel = "noopener";
+      }
       statusEl.append(anchor);
     });
+    if (links.length) statusEl.append(document.createTextNode("."));
   }
 
   function clearStatus() {
@@ -229,10 +243,7 @@ function initForm() {
       setStatus(
         "info",
         "This form isn't connected yet, so nothing was sent. Reach me on",
-        [
-          { href: MAKERWORLD, text: "MakerWorld" },
-          { href: DISCORD, text: "Discord" },
-        ]
+        contactLinks()
       );
       console.info(
         "[Grafted3D] Inquiry form is not connected. Set VITE_INQUIRY_ENDPOINT in .env and rebuild. See README.md."
@@ -268,10 +279,7 @@ function initForm() {
       setStatus("success", "Thanks — I'll get back to you.");
     } catch (error) {
       console.error("[Grafted3D] Inquiry submission failed:", error);
-      setStatus("error", "That didn't send. Please try again, or reach me on", [
-        { href: MAKERWORLD, text: "MakerWorld" },
-        { href: DISCORD, text: "Discord" },
-      ]);
+      setStatus("error", "That didn't send. Please try again, or reach me on", contactLinks());
     } finally {
       submitBtn.removeAttribute("aria-busy");
       submitBtn.disabled = false;
@@ -285,7 +293,95 @@ function initYear() {
   if (year) year.textContent = String(new Date().getFullYear());
 }
 
+/* ==========================================================================
+   3D preview
+
+   three.js is the largest asset on the page, so it is fetched as its own
+   chunk once the hero stage is close to the viewport instead of blocking the
+   first paint.
+   ========================================================================== */
+function initStage() {
+  const stage = document.querySelector("[data-stage]");
+  if (!stage) return;
+
+  const fail = (error) => {
+    console.error("[Grafted3D] 3D preview failed to load:", error);
+    stage.dataset.state = "error";
+    const status = stage.querySelector("[data-stage-status]");
+    if (status) status.textContent = "3D preview unavailable.";
+  };
+
+  let booted = false;
+  let observer = null;
+
+  const boot = () => {
+    if (booted) return;
+    booted = true;
+    if (observer) observer.disconnect();
+    import("./viewport.js")
+      .then(({ initStage: mount }) => mount())
+      .catch(fail);
+  };
+
+  if (!("IntersectionObserver" in window)) {
+    boot();
+    return;
+  }
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) boot();
+    },
+    { rootMargin: "600px 0px" }
+  );
+  observer.observe(stage);
+
+  // A page loaded in a background tab never reports an intersection, so also
+  // boot on the first moment it is visible, or shortly after load as a net.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) boot();
+  });
+  window.setTimeout(boot, 2500);
+}
+
+/* ==========================================================================
+   Optional integrations, driven by build-time env vars
+   ========================================================================== */
+function initAnalytics() {
+  if (!CF_BEACON_TOKEN) return;
+
+  const script = document.createElement("script");
+  script.defer = true;
+  script.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  script.dataset.cfBeacon = JSON.stringify({ token: CF_BEACON_TOKEN });
+  document.head.append(script);
+}
+
+function initContactEmail() {
+  if (!CONTACT_EMAIL) return;
+  const href = `mailto:${CONTACT_EMAIL}`;
+
+  const row = document.querySelector("[data-contact-links]");
+  if (row) {
+    const link = document.createElement("a");
+    link.className = "contact__link";
+    link.href = href;
+    link.textContent = CONTACT_EMAIL;
+    row.prepend(link);
+  }
+
+  const footer = document.querySelector("[data-footer-links]");
+  if (footer) {
+    const link = document.createElement("a");
+    link.href = href;
+    link.textContent = "Email";
+    footer.append(link);
+  }
+}
+
 initNav();
 initForm();
 initStage();
+initAnalytics();
+initContactEmail();
 initYear();

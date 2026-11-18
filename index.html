@@ -20,8 +20,21 @@
       content="Custom parts, prototypes, and one-off objects. Design, modeling, and 3D printing in-house."
     />
     <meta property="og:url" content="https://grafted3d.com/" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content="https://grafted3d.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Grafted3D — we design 3D models and 3D print them. Custom parts, prototypes, one-off prints."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Grafted3D — We design 3D models and 3D print them" />
+    <meta name="twitter:image" content="https://grafted3d.com/og-image.png" />
+    <meta
+      name="twitter:description"
+      content="Custom parts, prototypes, and one-off objects. Design, modeling, and 3D printing in-house."
+    />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -62,6 +75,7 @@
           <a href="#services" class="nav__link">What we do</a>
           <a href="#process" class="nav__link">How it works</a>
           <a href="#work" class="nav__link">Work</a>
+          <a href="#faq" class="nav__link">FAQ</a>
           <a href="#contact" class="nav__link">Contact</a>
         </nav>
 
@@ -85,6 +99,7 @@
           <a href="#services" class="menu__link">What we do</a>
           <a href="#process" class="menu__link">How it works</a>
           <a href="#work" class="menu__link">Work</a>
+          <a href="#faq" class="menu__link">FAQ</a>
           <a href="#contact" class="menu__link">Contact</a>
           <a href="#contact" class="btn menu__cta">Start a project</a>
         </div>
@@ -121,13 +136,19 @@
                 data-stage-canvas
                 tabindex="0"
                 role="application"
+                aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"
+                aria-describedby="stage-hint"
                 aria-label="3D model of the 3DBenchy calibration boat. Drag to rotate, or use the arrow keys when it has focus."
               ></canvas>
               <p class="stage__status" data-stage-status>Loading model…</p>
+              <div class="stage__file" data-stage-file hidden>
+                <span class="stage__file-name" data-stage-file-name></span>
+                <button type="button" data-stage-reset>Show the benchy</button>
+              </div>
             </div>
             <p class="hero__caption">
               <span>3DBenchy — reference part</span>
-              <span>Drag or arrow keys</span>
+              <span id="stage-hint">Drag · arrow keys · drop an STL</span>
             </p>
           </div>
         </div>
@@ -278,11 +299,69 @@
         </div>
       </section>
 
-      <section class="section section--band" id="contact">
+      <section class="section section--band" id="faq">
+        <div class="wrap">
+          <div class="section__head">
+            <p class="section__meta">
+              <span class="section__idx">04</span>
+              <span class="section__label">Questions</span>
+              <span class="section__rule"></span>
+            </p>
+            <h2 class="section__title">Before you send a brief</h2>
+            <p class="section__text">
+              The short answers. Anything else, ask in the form below.
+            </p>
+          </div>
+
+          <div class="faq">
+            <details class="faq__item">
+              <summary class="faq__q">What does a project cost?</summary>
+              <p class="faq__a">
+                It depends on the size, the material, and how much design work the part needs. Send
+                the details and you get a price with the design, before anything is printed.
+              </p>
+            </details>
+
+            <details class="faq__item">
+              <summary class="faq__q">How long does it take?</summary>
+              <p class="faq__a">
+                You get a timeline with the quote, before anything is printed. Complexity is
+                usually what sets the pace, not the size of the part.
+              </p>
+            </details>
+
+            <details class="faq__item">
+              <summary class="faq__q">Do I need a 3D file to start?</summary>
+              <p class="faq__a">
+                No. A sketch, a photo, or a written description is enough to start. If you already
+                have an STL, OBJ, 3MF, or STEP file, send it and the work starts from there.
+              </p>
+            </details>
+
+            <details class="faq__item">
+              <summary class="faq__q">Can you copy or replace an existing part?</summary>
+              <p class="faq__a">
+                For a replacement or a copy of something you already own, photos with a few key
+                measurements are the usual starting point. We confirm dimensions before printing.
+              </p>
+            </details>
+
+            <details class="faq__item">
+              <summary class="faq__q">What can be printed?</summary>
+              <p class="faq__a">
+                Custom parts, prototypes, brackets, housings, replacements, and small batches. If it
+                can be modeled and printed, ask — that's usually the right question to send.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contact">
         <div class="wrap contact">
           <div class="contact__intro">
             <p class="section__meta">
-              <span class="section__idx">04</span>
+              <span class="section__idx">05</span>
               <span class="section__label">Contact</span>
               <span class="section__rule"></span>
             </p>
@@ -299,7 +378,7 @@
               <li>When you need it</li>
             </ul>
 
-            <p class="contact__links">
+            <p class="contact__links" data-contact-links>
               <a
                 class="contact__link"
                 href="https://makerworld.com/en/@Grafted3D"
@@ -412,10 +491,11 @@
           <a href="#services">What we do</a>
           <a href="#process">How it works</a>
           <a href="#work">Work</a>
+          <a href="#faq">FAQ</a>
           <a href="#contact">Contact</a>
         </nav>
 
-        <nav class="footer__col" aria-label="Elsewhere">
+        <nav class="footer__col" aria-label="Elsewhere" data-footer-links>
           <span class="footer__k">Elsewhere</span>
           <a href="https://makerworld.com/en/@Grafted3D" target="_blank" rel="noopener">MakerWorld</a>
           <a href="https://discord.gg/vGRDAPmKx" target="_blank" rel="noopener">Discord</a>

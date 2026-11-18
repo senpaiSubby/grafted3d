@@ -21,18 +21,22 @@ npm run preview   # serves the production build
 ## Structure
 
 ```
-index.html          Hero, services, process, work, contact, footer
-src/style.css       Styles (light, technical theme)
-src/main.js         Mobile menu, form validation, footer year
-src/viewport.js     Draggable 3D preview (three.js + OrbitControls)
-src/config.js       Inquiry endpoint + attachment limits
-scripts/            build-benchy.mjs — regenerates the 3D model asset
-public/models/      Decimated 3DBenchy mesh for the 3D preview
-public/favicon.svg  Small G3D mark
+index.html            Hero, services, process, work, FAQ, contact, footer
+404.html              Standalone not-found page (published as dist/404.html)
+src/style.css         Styles (light, technical theme)
+src/main.js           Mobile menu, form validation, footer year, lazy 3D boot
+src/viewport.js       Draggable 3D preview (three.js + OrbitControls), loaded on demand
+src/config.js         Build-time options: inquiry endpoint, contact email, analytics
+scripts/              build-benchy.mjs (3D asset), build-og.mjs (social preview)
+public/models/        Decimated 3DBenchy mesh for the 3D preview
+public/og-image.svg   Source art for the social preview; .png is generated from it
+public/robots.txt     Crawler rules + sitemap pointer
+public/sitemap.xml    Single-URL sitemap
+public/favicon.svg    Small G3D mark
 ```
 
 One page, one route. The only navigation is anchor links: `#home`, `#services`,
-`#process`, `#work`, `#contact`.
+`#process`, `#work`, `#faq`, `#contact`.
 
 ## 3D preview
 
@@ -49,11 +53,28 @@ npm run build:model          # re-download, decimate and rewrite the mesh
 npm run build:model -- path/to/3DBenchy.stl   # or use a local file
 ```
 
+- three.js and the viewport live in their own chunk; `src/main.js` imports it only
+  when the stage is within 600 px of the viewport, so the first paint is not blocked.
 - Drag to orbit, or focus the canvas and use the arrow keys; zoom is disabled so
-the page keeps its scroll.
+  the page keeps its scroll.
+- Drop an STL onto the stage to preview it. The file is parsed in the browser with
+  `STLLoader` and never uploaded; 25 MB cap, Z-up rotation, camera refit, and a
+  "Show the benchy" button to reset.
 - The render loop pauses off screen and when the tab is hidden.
 - `prefers-reduced-motion` turns off the slow auto-rotation.
 - Without WebGL or `DecompressionStream` the stage shows a short message instead.
+
+## Social preview image
+
+`public/og-image.png` (1200×630) is what Discord, MakerWorld and search results show
+for a shared link. It is generated from `public/og-image.svg`:
+
+```sh
+npm run build:og    # rewrites public/og-image.png (needs the sharp dev dependency)
+```
+
+Edit the SVG, re-run the script, and commit the PNG. `index.html` points `og:image`
+and `twitter:image` at `https://grafted3d.com/og-image.png`.
 
 ## Deploying to GitHub Pages
 
@@ -63,46 +84,43 @@ build step in the Pages UI.
 1. Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 2. Every push to `main` runs `.github/workflows/deploy.yml`, which installs, builds
    and publishes `dist/`.
-3. The site is served at <https://senpaisubby.github.io/grafted3d/>.
+3. The site is served at <https://grafted3d.com/> (custom domain) and
+   <https://senpaisubby.github.io/grafted3d/>, which redirects to it.
 
 `vite.config.js` uses relative asset URLs, so the same build also works at a domain
-root.
+root. `404.html` and `robots.txt` sit at the published root, so GitHub Pages serves
+the custom not-found page for unknown paths.
 
 ### Custom domain
 
-`grafted3d.com` is not attached to Pages yet — its apex A record still points at the
-old host. When you are ready to move it:
+`grafted3d.com` is attached to the Pages site (apex A records
+`185.199.108–111.153`, no proxy). GitHub issues the Let's Encrypt certificate
+asynchronously: while `https_certificate.state` is not `approved`, the domain answers
+on `http://` only and `https://` shows a certificate error. Once it is approved, tick
+**Enforce HTTPS** in Settings → Pages:
 
-1. At the DNS provider (the domain already uses Cloudflare nameservers), replace the
-   apex A record with GitHub Pages':
-   `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   (optional AAAA: `2606:50c0:8000::153`, `8001::153`, `8002::153`, `8003::153`), and
-   add `CNAME www → senpaisubby.github.io`.
-2. Settings → Pages → Custom domain → `grafted3d.com`, then tick **Enforce HTTPS**
-   once the certificate is issued.
+```sh
+gh api repos/senpaiSubby/grafted3d/pages --jq '.https_certificate.state'
+```
 
-## Connecting the inquiry form
+## Optional integrations
+
+All three are build-time variables and are inert when unset. Locally they live in
+`.env` (`cp .env.example .env`); on Pages they are repository variables
+(Settings → Secrets and variables → Actions → Variables) passed by `deploy.yml`.
+
+| Variable                | Effect when set                                                       |
+| ----------------------- | --------------------------------------------------------------------- |
+| `VITE_INQUIRY_ENDPOINT` | The form posts to this URL instead of showing the "not connected" note |
+| `VITE_CONTACT_EMAIL`    | Adds a `mailto:` link to the contact row, footer, and form fallback    |
+| `VITE_CF_BEACON_TOKEN`  | Loads the Cloudflare Web Analytics beacon (cookieless page views)     |
+
+### The inquiry form
 
 The form validates input and sends a real `POST`. It never fakes a success state.
 Until an endpoint is configured it verifies the fields and then tells the visitor that
-delivery isn't connected, pointing to MakerWorld instead.
-
-```sh
-cp .env.example .env
-# VITE_INQUIRY_ENDPOINT=https://your-form-endpoint.example/submit
-```
-
-`.env` is git-ignored. To use an endpoint on Pages, add `VITE_INQUIRY_ENDPOINT` as a
-repository variable (Settings → Secrets and variables → Actions → Variables) and
-pass it to the build step in `.github/workflows/deploy.yml`:
-
-```yaml
-      - run: npm run build
-        env:
-          VITE_INQUIRY_ENDPOINT: ${{ vars.VITE_INQUIRY_ENDPOINT }}
-```
-
-### What the endpoint receives
+delivery isn't connected, pointing to the contact links (including the email address
+when `VITE_CONTACT_EMAIL` is set).
 
 `POST` with `multipart/form-data`:
 
@@ -125,13 +143,8 @@ sync.
 ## External links
 
 - MakerWorld: <https://makerworld.com/en/@Grafted3D>
-- Discord: <https://discord.gg/vGRDAPmKx>
+- Discord: <https://discord.gg/vGRDAPmKx> (this invite expires 18 December 2026 —
+  replace it with a never-expiring one, here and in `index.html`)
 - GitHub: <https://github.com/senpaiSubby>
 
-Update the canonical and Open Graph URLs in `index.html` if the domain changes.
-
-## Publish
-
-`dist/` is static, so any host will serve it. This project publishes to GitHub Pages
-on every push to `main` — see
-[Deploying to GitHub Pages](#deploying-to-github-pages).
+Update the canonical, Open Graph and sitemap URLs if the domain changes.
