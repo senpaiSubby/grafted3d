@@ -55,37 +55,35 @@ the page keeps its scroll.
 - `prefers-reduced-motion` turns off the slow auto-rotation.
 - Without WebGL or `DecompressionStream` the stage shows a short message instead.
 
-## Deploying to GitHub Pages
+## Deploying to Cloudflare Pages
 
-The build emits static files in `dist/` with relative asset URLs, so the same output
-works at `https://<user>.github.io/<repo>/` and at a domain root.
+The repo is private, so the site deploys through Cloudflare Pages rather than GitHub
+Pages. The build is plain static files in `dist/` with relative asset URLs, so it
+works on `<project>.pages.dev` and on the custom domain.
 
-1. Push the project to a **public** GitHub repo with `main` as the default branch
-   (Pages on free accounts requires a public repo).
-2. Repo → Settings → Pages → Build and deployment → Source: **GitHub Actions**.
-3. Every push to `main` runs `.github/workflows/deploy.yml`: it installs, builds and
-   publishes `dist/`.
-4. `public/CNAME` holds `grafted3d.com`, so Pages serves the site on that domain.
+One-time dashboard setup:
 
-### DNS for grafted3d.com
+1. dash.cloudflare.com → **Workers & Pages** → **Create** → **Pages** →
+   **Connect to Git**, then authorise the Cloudflare GitHub app for
+   `senpaiSubby/grafted3d`.
+2. Build settings: preset **Vite**, build command `npm run build`, output directory
+   `dist`. Node comes from `.nvmrc`.
+3. Deploy. Every push to `main` rebuilds the site; pull requests get preview
+   deployments.
 
-At your registrar, point the apex domain at GitHub Pages (replace any existing A/AAAA
-records) and `www` at the Pages host:
+Without the Git integration you can publish a local build with
+`npx wrangler pages deploy dist`.
 
-| Type | Name | Value |
-| ---- | ---- | ----- |
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
-| AAAA | `@` | `2606:50c0:8000::153` |
-| AAAA | `@` | `2606:50c0:8001::153` |
-| AAAA | `@` | `2606:50c0:8002::153` |
-| AAAA | `@` | `2606:50c0:8003::153` |
-| CNAME | `www` | `senpaiSubby.github.io` |
+### Custom domain
 
-Add the domain under Settings → Pages → Custom domain, wait for the DNS check to go
-green, then tick **Enforce HTTPS** (the certificate is issued automatically).
+`grafted3d.com` already resolves through Cloudflare, so Pages can manage the records:
+
+1. Pages project → **Custom domains** → **Set up a custom domain** → `grafted3d.com`.
+2. Accept the proposed record change — it replaces the current apex A record.
+3. Repeat for `www.grafted3d.com`.
+
+HTTPS certificates are issued automatically, and other Cloudflare records (mail, etc.)
+are left untouched.
 
 ## Connecting the inquiry form
 
@@ -98,15 +96,9 @@ cp .env.example .env
 # VITE_INQUIRY_ENDPOINT=https://your-form-endpoint.example/submit
 ```
 
-`.env` is git-ignored. To use an endpoint on GitHub Pages, add `VITE_INQUIRY_ENDPOINT`
-as a repository variable (Settings → Secrets and variables → Actions → Variables) and
-expose it on the build step in `.github/workflows/deploy.yml`:
-
-```yaml
-      - run: npm run build
-        env:
-          VITE_INQUIRY_ENDPOINT: ${{ vars.VITE_INQUIRY_ENDPOINT }}
-```
+`.env` is git-ignored. On Cloudflare Pages, add `VITE_INQUIRY_ENDPOINT` under
+**Settings → Environment variables** (Production and Preview) and redeploy — Vite bakes
+`VITE_*` values in at build time, so a rebuild is required.
 
 ### What the endpoint receives
 
@@ -138,5 +130,6 @@ Update the canonical and Open Graph URLs in `index.html` if the domain changes.
 
 ## Publish
 
-`dist/` is static, so any host will serve it. This project publishes to GitHub Pages
-on every push to `main` — see [Deploying to GitHub Pages](#deploying-to-github-pages).
+`dist/` is static, so any host will serve it. This project publishes from Cloudflare
+Pages on every push to `main` — see
+[Deploying to Cloudflare Pages](#deploying-to-cloudflare-pages).
