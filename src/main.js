@@ -289,6 +289,46 @@ function initForm() {
 }
 
 /* ==========================================================================
+   Theme toggle
+
+   The initial theme is set by an inline script in <head> (before paint); this
+   only flips it, remembers the choice, and keeps the button label and the
+   browser chrome colour in step.
+   ========================================================================== */
+function initTheme() {
+  const toggle = document.getElementById("theme-toggle");
+  if (!toggle) return;
+
+  const THEME_COLOR = { dark: "#06070a", light: "#fbfbf9" };
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const root = document.documentElement;
+
+  const current = () => (root.dataset.theme === "light" ? "light" : "dark");
+
+  const sync = () => {
+    const theme = current();
+    toggle.setAttribute(
+      "aria-label",
+      theme === "light" ? "Switch to dark theme" : "Switch to light theme"
+    );
+    if (meta) meta.setAttribute("content", THEME_COLOR[theme]);
+  };
+
+  toggle.addEventListener("click", () => {
+    const next = current() === "light" ? "dark" : "light";
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem("grafted3d-theme", next);
+    } catch (error) {
+      /* private mode: the theme still changes for this page view */
+    }
+    sync();
+  });
+
+  sync();
+}
+
+/* ==========================================================================
    Scroll reveal
 
    Sections fade in as they come into view. The class is added here, so with
@@ -429,6 +469,7 @@ function initContactEmail() {
 }
 
 initNav();
+initTheme();
 initForm();
 initStage();
 initReveal();

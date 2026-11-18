@@ -12,8 +12,20 @@
   --line: rgba(255, 255, 255, 0.08);
   --line-2: rgba(255, 255, 255, 0.16);
   --accent: #46e39a;
+  --accent-rgb: 70, 227, 154;
+  --accent-hover: #6ef2b5;
   --accent-ink: #04140d;
   --danger: #ff7a68;
+
+  --hairline: rgba(255, 255, 255, 0.1);
+  --hairline-2: rgba(255, 255, 255, 0.15);
+  --sheen: rgba(255, 255, 255, 0.028);
+  --grid: rgba(255, 255, 255, 0.03);
+  --header-bg: rgba(6, 7, 10, 0.78);
+  --overlay-bg: rgba(6, 7, 10, 0.9);
+  --stage-a: #17212b;
+  --stage-b: #0a0f14;
+  --stage-c: #04060a;
 
   --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
@@ -73,7 +85,7 @@ a {
 }
 
 ::selection {
-  background: rgba(70, 227, 154, 0.28);
+  background: rgba(var(--accent-rgb), 0.28);
   color: var(--ink);
 }
 
@@ -662,7 +674,7 @@ a {
   justify-content: space-between;
   gap: 16px;
   padding: 11px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom: 1px solid var(--hairline-2);
   font-family: var(--mono);
   font-size: 12px;
 }
@@ -670,7 +682,7 @@ a {
 .work__k {
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--steel);
 }
 
 .work__v {
@@ -1082,13 +1094,41 @@ a {
   }
 }
 
+/* Light theme. The dark palette above is the default; the toggle sets
+   data-theme="light" on <html> and everything below follows the tokens. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --paper: #fbfbf9;
+  --band: #f2f1ec;
+  --surface: #ffffff;
+  --ink: #131518;
+  --steel: #5a6168;
+  --line: #e2e0d9;
+  --line-2: #c9c6bd;
+  --accent: #176a49;
+  --accent-rgb: 23, 106, 73;
+  --accent-hover: #124f37;
+  --accent-ink: #ffffff;
+  --danger: #a1321f;
+
+  --hairline: rgba(19, 21, 24, 0.1);
+  --hairline-2: rgba(19, 21, 24, 0.16);
+  --sheen: rgba(19, 21, 24, 0.025);
+  --grid: rgba(19, 21, 24, 0.05);
+  --header-bg: rgba(251, 251, 249, 0.86);
+  --overlay-bg: rgba(255, 255, 255, 0.92);
+  --stage-a: #fdfbf6;
+  --stage-b: #eee7db;
+  --stage-c: #dcd4c5;
+}
+
 /* ==========================================================================
    Futuristic pass — dark instrument panel
    ========================================================================== */
 
 body {
   background:
-    radial-gradient(900px 520px at 10% -10%, rgba(70, 227, 154, 0.1), transparent 62%),
+    radial-gradient(900px 520px at 10% -10%, rgba(var(--accent-rgb), 0.1), transparent 62%),
     radial-gradient(820px 520px at 92% 104%, rgba(64, 132, 255, 0.09), transparent 60%),
     var(--paper);
 }
@@ -1099,8 +1139,8 @@ body::before {
   inset: 0;
   z-index: -1;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
   background-size: 64px 64px;
   -webkit-mask-image: radial-gradient(140% 90% at 50% 0%, #000 18%, transparent 78%);
   mask-image: radial-gradient(140% 90% at 50% 0%, #000 18%, transparent 78%);
@@ -1109,8 +1149,8 @@ body::before {
 
 /* ---------- Chrome ---------- */
 .header {
-  background: rgba(6, 7, 10, 0.78);
-  border-bottom-color: rgba(255, 255, 255, 0.07);
+  background: var(--header-bg);
+  border-bottom-color: var(--hairline);
 }
 
 .header::after {
@@ -1123,14 +1163,14 @@ body::before {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(70, 227, 154, 0.55) 35%,
-    rgba(70, 227, 154, 0.15) 72%,
+    rgba(var(--accent-rgb), 0.55) 35%,
+    rgba(var(--accent-rgb), 0.15) 72%,
     transparent
   );
 }
 
 .menu {
-  background: rgba(8, 10, 14, 0.97);
+  background: var(--surface);
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.95);
 }
 
@@ -1140,18 +1180,18 @@ body::before {
 }
 
 .burger {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--grid);
   border-color: var(--line-2);
 }
 
 /* ---------- Buttons ---------- */
 .btn {
-  border-color: rgba(70, 227, 154, 0.45);
+  border-color: rgba(var(--accent-rgb), 0.45);
   background: var(--accent);
   color: var(--accent-ink);
   box-shadow:
-    0 0 0 1px rgba(70, 227, 154, 0.22),
-    0 14px 34px -18px rgba(70, 227, 154, 0.85);
+    0 0 0 1px rgba(var(--accent-rgb), 0.22),
+    0 14px 34px -18px rgba(var(--accent-rgb), 0.85);
   transition:
     background 0.15s ease,
     box-shadow 0.2s ease,
@@ -1161,11 +1201,11 @@ body::before {
 }
 
 .btn:hover {
-  background: #6ef2b5;
-  border-color: rgba(70, 227, 154, 0.7);
+  background: var(--accent-hover);
+  border-color: rgba(var(--accent-rgb), 0.7);
   box-shadow:
-    0 0 0 1px rgba(70, 227, 154, 0.4),
-    0 18px 44px -16px rgba(70, 227, 154, 0.95);
+    0 0 0 1px rgba(var(--accent-rgb), 0.4),
+    0 18px 44px -16px rgba(var(--accent-rgb), 0.95);
   transform: translateY(-1px);
 }
 
@@ -1177,28 +1217,28 @@ body::before {
 }
 
 .btn--outline:hover {
-  background: rgba(70, 227, 154, 0.07);
-  border-color: rgba(70, 227, 154, 0.55);
+  background: rgba(var(--accent-rgb), 0.07);
+  border-color: rgba(var(--accent-rgb), 0.55);
   color: var(--accent);
   transform: translateY(-1px);
 }
 
 /* ---------- Hero ---------- */
 .eyebrow::before {
-  box-shadow: 0 0 14px rgba(70, 227, 154, 0.85);
+  box-shadow: 0 0 14px rgba(var(--accent-rgb), 0.85);
   animation: pulse 2.8s ease-in-out infinite;
 }
 
 .hero h1 {
-  text-shadow: 0 0 90px rgba(70, 227, 154, 0.14);
+  text-shadow: 0 0 90px rgba(var(--accent-rgb), 0.14);
 }
 
 .hero__art {
   background: var(--surface);
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: var(--hairline-2);
   box-shadow:
-    0 0 0 1px rgba(70, 227, 154, 0.08),
-    0 40px 90px -50px rgba(70, 227, 154, 0.55);
+    0 0 0 1px rgba(var(--accent-rgb), 0.08),
+    0 40px 90px -50px rgba(var(--accent-rgb), 0.55);
 }
 
 .hero__art::before,
@@ -1208,7 +1248,7 @@ body::before {
 
 .stage,
 .stage__status {
-  background: radial-gradient(120% 100% at 32% 16%, #17212b 0%, #0a0f14 58%, #04060a 100%);
+  background: radial-gradient(120% 100% at 32% 16%, var(--stage-a) 0%, var(--stage-b) 58%, var(--stage-c) 100%);
 }
 
 .stage::before {
@@ -1219,7 +1259,7 @@ body::before {
   width: 62%;
   height: 18%;
   transform: translateX(-50%);
-  background: radial-gradient(closest-side, rgba(70, 227, 154, 0.18), transparent 72%);
+  background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.18), transparent 72%);
   filter: blur(4px);
   pointer-events: none;
   z-index: 0;
@@ -1232,7 +1272,7 @@ body::before {
   right: 0;
   top: -140px;
   height: 140px;
-  background: linear-gradient(180deg, transparent, rgba(70, 227, 154, 0.13), transparent);
+  background: linear-gradient(180deg, transparent, rgba(var(--accent-rgb), 0.13), transparent);
   animation: scan 9s linear infinite;
   pointer-events: none;
   z-index: 1;
@@ -1244,8 +1284,8 @@ body::before {
 }
 
 .stage__file {
-  background: rgba(6, 7, 10, 0.88);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: var(--overlay-bg);
+  border-color: var(--hairline-2);
 }
 
 .stage__canvas:focus-visible {
@@ -1254,17 +1294,17 @@ body::before {
 
 .hero__caption {
   background: var(--surface);
-  border-top-color: rgba(255, 255, 255, 0.1);
+  border-top-color: var(--hairline);
 }
 
 /* ---------- Panels ---------- */
 .specs {
-  border-top-color: rgba(70, 227, 154, 0.35);
+  border-top-color: rgba(var(--accent-rgb), 0.35);
 }
 
 .plates {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.008));
-  border-color: rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, var(--sheen), transparent);
+  border-color: var(--hairline-2);
 }
 
 .plate {
@@ -1272,7 +1312,7 @@ body::before {
 }
 
 .plate:hover {
-  background: rgba(70, 227, 154, 0.045);
+  background: rgba(var(--accent-rgb), 0.045);
 }
 
 .plate__icon {
@@ -1284,29 +1324,29 @@ body::before {
 }
 
 .step {
-  border-top-color: rgba(255, 255, 255, 0.16);
+  border-top-color: var(--hairline-2);
 }
 
 .step__num {
-  border-color: rgba(70, 227, 154, 0.45);
-  background: rgba(70, 227, 154, 0.07);
+  border-color: rgba(var(--accent-rgb), 0.45);
+  background: rgba(var(--accent-rgb), 0.07);
   color: var(--accent);
-  box-shadow: 0 0 22px -8px rgba(70, 227, 154, 0.9);
+  box-shadow: 0 0 22px -8px rgba(var(--accent-rgb), 0.9);
 }
 
 .section__rule {
-  background: linear-gradient(90deg, rgba(70, 227, 154, 0.45), rgba(255, 255, 255, 0.06));
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.45), var(--hairline));
 }
 
 .work__card {
-  border-color: rgba(70, 227, 154, 0.32);
+  border-color: rgba(var(--accent-rgb), 0.32);
   background:
-    linear-gradient(160deg, rgba(70, 227, 154, 0.1), rgba(70, 227, 154, 0.02) 45%, transparent 78%),
+    linear-gradient(160deg, rgba(var(--accent-rgb), 0.1), rgba(var(--accent-rgb), 0.02) 45%, transparent 78%),
     var(--surface);
   color: var(--ink);
   box-shadow:
-    0 0 0 1px rgba(70, 227, 154, 0.1),
-    0 30px 70px -45px rgba(70, 227, 154, 0.7);
+    0 0 0 1px rgba(var(--accent-rgb), 0.1),
+    0 30px 70px -45px rgba(var(--accent-rgb), 0.7);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
@@ -1314,10 +1354,10 @@ body::before {
 }
 
 .work__card:hover {
-  border-color: rgba(70, 227, 154, 0.7);
+  border-color: rgba(var(--accent-rgb), 0.7);
   box-shadow:
-    0 0 0 1px rgba(70, 227, 154, 0.26),
-    0 36px 80px -44px rgba(70, 227, 154, 0.95);
+    0 0 0 1px rgba(var(--accent-rgb), 0.26),
+    0 36px 80px -44px rgba(var(--accent-rgb), 0.95);
   transform: translateY(-2px);
 }
 
@@ -1332,10 +1372,10 @@ body::before {
 /* ---------- Form ---------- */
 .form {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008)),
+    linear-gradient(180deg, var(--sheen), transparent),
     var(--surface);
-  border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 40px 90px -60px rgba(70, 227, 154, 0.5);
+  border-color: var(--hairline-2);
+  box-shadow: 0 40px 90px -60px rgba(var(--accent-rgb), 0.5);
 }
 
 .field select {
@@ -1349,7 +1389,7 @@ body::before {
 .field input:hover,
 .field select:hover,
 .field textarea:hover {
-  border-color: rgba(70, 227, 154, 0.35);
+  border-color: rgba(var(--accent-rgb), 0.35);
 }
 
 .field input:focus,
@@ -1357,8 +1397,8 @@ body::before {
 .field textarea:focus {
   border-color: var(--accent);
   box-shadow:
-    0 0 0 3px rgba(70, 227, 154, 0.14),
-    0 0 26px -12px rgba(70, 227, 154, 0.7);
+    0 0 0 3px rgba(var(--accent-rgb), 0.14),
+    0 0 26px -12px rgba(var(--accent-rgb), 0.7);
 }
 
 .field input[aria-invalid="true"],
@@ -1376,7 +1416,7 @@ body::before {
 /* ---------- Footer ---------- */
 .footer {
   position: relative;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid var(--hairline);
 }
 
 .footer::before {
@@ -1386,7 +1426,50 @@ body::before {
   right: 0;
   top: -1px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(70, 227, 154, 0.35), transparent);
+  background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.35), transparent);
+}
+
+/* ---------- Theme toggle ---------- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--line-2);
+  background: transparent;
+  color: var(--steel);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--accent);
+  border-color: rgba(var(--accent-rgb), 0.5);
+  background: rgba(var(--accent-rgb), 0.07);
+}
+
+.theme-toggle .icon {
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+}
+
+.theme-toggle__sun {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-toggle__sun {
+  display: block;
+}
+
+:root[data-theme="light"] .theme-toggle__moon {
+  display: none;
 }
 
 /* ---------- Motion ---------- */
