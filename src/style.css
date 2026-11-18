@@ -737,8 +737,30 @@ a {
   margin-top: 0;
 }
 
+/* ---------- Inline icons ---------- */
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.icon {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  color: var(--steel);
+}
+
+.contact__link:hover .icon,
+.footer__col a:hover .icon {
+  color: var(--accent);
+}
+
 .contact__link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   margin-top: 26px;
   font-family: var(--mono);
   font-size: 11.5px;
@@ -1001,7 +1023,9 @@ a {
 }
 
 .footer__col a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 8px;
   font-size: 14px;
   color: var(--steel);

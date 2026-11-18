@@ -361,22 +361,31 @@ function initContactEmail() {
   if (!CONTACT_EMAIL) return;
   const href = `mailto:${CONTACT_EMAIL}`;
 
+  const makeLink = (label) => {
+    const link = document.createElement("a");
+    link.href = href;
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "icon");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#i-mail");
+    svg.append(use);
+
+    link.append(svg, document.createTextNode(label));
+    return link;
+  };
+
   const row = document.querySelector("[data-contact-links]");
   if (row) {
-    const link = document.createElement("a");
+    const link = makeLink(CONTACT_EMAIL);
     link.className = "contact__link";
-    link.href = href;
-    link.textContent = CONTACT_EMAIL;
     row.prepend(link);
   }
 
   const footer = document.querySelector("[data-footer-links]");
-  if (footer) {
-    const link = document.createElement("a");
-    link.href = href;
-    link.textContent = "Email";
-    footer.append(link);
-  }
+  if (footer) footer.append(makeLink("Email"));
 }
 
 initNav();
