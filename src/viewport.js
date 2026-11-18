@@ -150,10 +150,12 @@ export function initStage() {
   }
 
   let raf = 0;
-  const clock = new THREE.Clock();
+  const timer = new THREE.Timer();
+  timer.connect(document);
   const frame = () => {
     raf = requestAnimationFrame(frame);
-    const delta = Math.min(clock.getDelta(), 0.05);
+    timer.update();
+    const delta = Math.min(timer.getDelta(), 0.05);
     if (held.size) {
       let azimuth = 0;
       let polar = 0;
